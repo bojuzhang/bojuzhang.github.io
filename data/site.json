@@ -1,0 +1,38 @@
+{
+  "site": {
+    "url": "https://bojuzhang.github.io",
+    "description": { "en": "", "zh": "" },
+    "updated": "",
+    "showPlaceholders": true
+  },
+  "profile": {
+    "name": { "en": "", "zh": "" },
+    "role": { "en": "", "zh": "" },
+    "affiliation": { "en": "", "zh": "" },
+    "location": { "en": "", "zh": "" },
+    "photo": "",
+    "email": "",
+    "cv": "",
+    "links": { "scholar": "", "github": "", "orcid": "" }
+  },
+  "about": [],
+  "research": [],
+  "news": [],
+  "publications": [],
+  "education": [],
+  "experience": [],
+  "projects": [],
+  "awards": [],
+  "service": [],
+  "contact": { "en": "", "zh": "" },
+  "sections": {
+    "research": true,
+    "news": true,
+    "publications": true,
+    "education": true,
+    "experience": true,
+    "projects": true,
+    "awards": false,
+    "service": false
+  }
+}
