@@ -1,0 +1,112 @@
+.section-empty {
+  color: var(--muted);
+  font-size: 1rem;
+  padding-block: 1.4rem;
+  margin: 0;
+}
+.archive-heading, .archive-row, .year-group {
+  display: grid;
+  grid-template-columns: minmax(8rem, 21%) minmax(0, 1fr);
+  gap: clamp(1rem, 4vw, 3rem);
+}
+.archive-heading {
+  padding: .75rem 0;
+  color: var(--muted);
+  font-size: .875rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--line);
+}
+.archive-heading + .section-empty { border-bottom: 1px solid var(--line); }
+.archive-row, .year-group, .research-entry {
+  padding-block: 1.6rem;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+.archive-date { color: var(--muted); font-size: .9375rem; font-variant-numeric: tabular-nums; }
+.archive-body h2, .research-entry h2, .project-card h2, .paper-record h3, .year-group h2 {
+  font-size: 1.25rem;
+  line-height: 1.35;
+  margin: 0;
+}
+.archive-subtitle, .archive-body ul, .research-entry p, .project-card p {
+  margin: .55rem 0 0;
+}
+.archive-subtitle, .project-card p, .research-entry p { color: var(--muted); }
+.archive-body ul { padding-inline-start: 1.2rem; }
+.news-entry p, .contact-details, .contact-details dd { margin: 0; }
+.contact-details dt { color: var(--muted); }
+
+.paper-filters, .resource-row, .project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .55rem;
+}
+.paper-filters { margin-bottom: 1.25rem; }
+.paper-filters button, .resource, .paper-citation summary {
+  border: 1px solid var(--line);
+  border-radius: .25rem;
+  color: var(--ink);
+  background: var(--paper);
+  font: inherit;
+  font-size: .875rem;
+  line-height: 1.5;
+  padding: .32rem .75rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+.paper-filters button[aria-pressed=true], .paper-filters button:hover, .resource:hover, .paper-citation summary:hover {
+  color: var(--accent);
+  background: var(--tint);
+  border-color: var(--accent);
+}
+.paper-record {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.35rem;
+  padding-block: 1.35rem;
+  overflow-wrap: anywhere;
+}
+.paper-record + .paper-record { border-top: 1px solid var(--line); }
+.year-group .paper-record:first-child { padding-top: 0; }
+.year-group .paper-record:last-child { padding-bottom: 0; }
+.year-group h2 { color: var(--muted); font-weight: 400; }
+.paper-image {
+  width: clamp(5rem, 16%, 9rem);
+  height: auto;
+  border-radius: .2rem;
+}
+.paper-text { flex: 1; min-width: 0; }
+.paper-record p { margin: .35rem 0 0; }
+.paper-venue { color: var(--muted); font-style: italic; }
+.paper-abstract { line-height: 1.6; }
+.resource-row, .paper-citation { margin-top: .75rem; }
+.paper-citation summary { display: list-item; width: fit-content; }
+.paper-citation pre { margin: .75rem 0; padding: 1rem; background: var(--surface); white-space: pre-wrap; overflow-wrap: anywhere; }
+.copy-feedback { color: var(--muted); font-size: .875rem; padding-inline-start: .5rem; }
+.paper-filters[hidden], .year-group[hidden], .paper-record[hidden], .copy-citation[hidden], .filter-empty[hidden] { display: none; }
+
+.project-index {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 1.3rem;
+}
+.project-card { border: 1px solid var(--line); border-radius: .35rem; background: var(--paper); overflow: hidden; }
+.project-card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+.project-card-body { padding: 1.4rem; overflow-wrap: anywhere; }
+.project-tags { list-style: none; padding: 0; margin: .8rem 0 0; }
+.project-tags li { color: var(--muted); font-size: .8125rem; }
+.project-tags li + li::before { content: '·'; margin-inline-end: .55rem; }
+.research-entry p { max-width: 65ch; }
+
+@media (max-width: 38rem) {
+  .archive-heading { grid-template-columns: auto 1fr; gap: .85rem; }
+  .archive-row, .year-group { grid-template-columns: minmax(0, 1fr); gap: .5rem; }
+  .paper-record { gap: .75rem; }
+}
+@media print {
+  .publication-archive .year-group[hidden] { display: grid; }
+  .publication-archive .paper-record[hidden] { display: flex; }
+  .paper-filters, .copy-citation, .copy-feedback, .filter-empty { display: none !important; }
+  .archive-row, .paper-record, .project-card { break-inside: avoid; }
+}

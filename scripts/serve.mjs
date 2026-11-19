@@ -45,7 +45,7 @@ const server = createServer(async (request, response) => {
 });
 
 server.on('error', error => { console.error(error.message); process.exitCode = 1; });
-server.listen(port, host, () => console.log(`Local: http://${host}:${port}/\n${watchMode ? 'Watching data/ and assets/. Refresh the browser after changes.' : 'Previewing the static site.'}`));
+server.listen(port, host, () => console.log(`Local: http://${host}:${port}/\n${watchMode ? 'Watching templates/, data/ and assets/. Refresh the browser after changes.' : 'Previewing the static site.'}`));
 
 const watchers = [];
 if (watchMode) {
@@ -61,7 +61,7 @@ if (watchMode) {
       if (queued) { queued = false; void rebuild(); }
     }
   }
-  for (const directory of ['data', 'assets', 'assets/images', 'assets/files']) {
+  for (const directory of ['templates', 'data', 'assets', 'assets/images', 'assets/files']) {
     watchers.push(watch(path.join(root, directory), () => {
       clearTimeout(timer);
       timer = setTimeout(rebuild, 100);

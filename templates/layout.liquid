@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="{{ locale }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>{{ title }}</title>
+  <meta name="description" content="{{ description }}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ title }}">
+  <meta property="og:description" content="{{ description }}">
+  {% if canonical %}
+  <link rel="canonical" href="{{ canonical }}">
+  <meta property="og:url" content="{{ canonical }}">
+  {% for language in languages %}<link rel="alternate" hreflang="{{ language.code }}" href="{{ language.href }}">{% endfor %}
+  {% endif %}
+  <link rel="icon" href="{{ prefix }}assets/favicon.svg" type="image/svg+xml">
+  <script src="{{ prefix }}assets/theme.js"></script>
+  <link rel="stylesheet" href="{{ prefix }}assets/styles.css">
+  <link rel="stylesheet" href="{{ prefix }}assets/sections.css">
+  <script defer src="{{ prefix }}assets/main.js"></script>
+  {% if hasPapers %}<script defer src="{{ prefix }}assets/papers.js"></script>{% endif %}
+</head>
+<body>
+  <a class="skip-link" href="#main">{{ ui.skip }}</a>
+  <header class="site-header">
+    <div class="masthead container">
+      <a class="brand" href="{{ home }}"><span class="book-mark" aria-hidden="true"></span>{{ brand }}</a>
+      <nav id="site-nav" class="site-nav" aria-label="{{ ui.navigation }}">
+        {% for item in menu %}<a href="{{ item.href }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.label }}</a>{% endfor %}
+      </nav>
+      <div class="tools">
+        <a class="language-switch" href="{{ alternate.href }}" lang="{{ alternate.locale }}" hreflang="{{ alternate.locale }}" aria-label="{{ alternate.name }}">{{ alternate.short }}</a>
+        <button class="theme-toggle" aria-label="{{ ui.theme }}" data-dark-label="{{ ui.dark }}" data-light-label="{{ ui.light }}" hidden>
+          <span aria-hidden="true" class="theme-icon">◐</span>
+        </button>
+        <button class="menu-toggle" aria-controls="site-nav" aria-expanded="false" aria-label="{{ ui.menu }}" hidden><span class="hamburger" aria-hidden="true"></span></button>
+      </div>
+    </div>
+  </header>
+  <main id="main" class="container" tabindex="-1">
+    {{ content | raw }}
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="colophon"><span>© {{ year }} {{ brand }}</span><span>{{ ui.themeCredit }} <a href="https://github.com/alshedivat/al-folio">al-folio</a></span>{% if updated %}<span>{{ ui.updated }} {{ updated }}</span>{% endif %}</div>
+      <nav class="footer-nav" aria-label="{{ ui.more }}">{% for item in footerMenu %}<a href="{{ item.href }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.label }}</a>{% endfor %}</nav>
+    </div>
+  </footer>
+</body>
+</html>
