@@ -12,7 +12,7 @@ const valueOf = (flag, fallback) => {
 };
 const port = Number(valueOf('--port', process.env.PORT || '4173'));
 const host = valueOf('--host', '127.0.0.1');
-const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.pdf': 'application/pdf', '.ico': 'image/x-icon', '.bib': 'text/plain; charset=utf-8' };
+const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.woff2': 'font/woff2', '.pdf': 'application/pdf', '.ico': 'image/x-icon', '.bib': 'text/plain; charset=utf-8' };
 
 await build();
 const server = createServer(async (request, response) => {

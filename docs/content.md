@@ -128,6 +128,6 @@
 
 ## 正式发布前的填写
 
-填入姓名、身份、院校与简介，配置所需的账号与 CV，然后将 `site.showPlaceholders` 设为 `false`。构建时只生成有内容且已开启的栏目页面。首页的代表论文来自标记为 `selected: true` 的条目，填写 `profile.photo` 后，个人照片将替换默认书页配图。
+填入姓名、身份、院校与简介，配置所需的账号与 CV，然后将 `site.showPlaceholders` 设为 `false`。构建时只生成有内容且已开启的栏目页面。首页的代表论文来自标记为 `selected: true` 的条目，填写 `profile.photo` 后，首页会在简介右侧显示照片。留空时不占用版面。
 
 如果准备公开个人内容，还可以填写 `site.description`、`site.url` 和 `site.updated`；无需修改前端布局。

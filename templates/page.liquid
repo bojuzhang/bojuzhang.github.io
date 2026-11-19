@@ -7,13 +7,5 @@
     <h1 class="post-title">{{ page.title }}</h1>
     {% if page.description %}<p class="post-description">{{ page.description }}</p>{% endif %}
   </header>
-  <div class="archive-layout">
-    <article>{{ content | raw }}</article>
-    {% if related.size > 0 %}
-      <nav class="related" aria-label="{{ relatedLabel }}">
-        <h2>{{ relatedLabel }}</h2>
-        {% for link in related %}<a href="{{ link.href }}">{{ link.label }}</a>{% endfor %}
-      </nav>
-    {% endif %}
-  </div>
+  <article>{{ content | raw }}</article>
 </div>

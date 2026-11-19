@@ -26,12 +26,6 @@ const sections = {
   service: ['Academic service', '学术服务']
 };
 const mainPages = ['about', 'research', 'publications', 'education', 'experience', 'projects'];
-const relatedPages = {
-  research: ['publications', 'projects'], publications: ['research', 'projects'],
-  projects: ['research', 'publications'], education: ['experience', 'awards'],
-  experience: ['education', 'service'], awards: ['education', 'experience'],
-  service: ['experience', 'education'], news: ['about', 'publications'], contact: ['about', 'education']
-};
 const subtitles = {
   research: ['Research interests and questions.', '研究兴趣与关注的问题。'],
   publications: ['Papers and preprints, organized by year.', '按年份收录论文与预印本。'],
@@ -75,33 +69,27 @@ function homeModel(ctx, pages, rawURL) {
   const subtitle = [local(profile.role), local(profile.affiliation)].filter(Boolean).join(' · ');
   const paragraphs = data.about.map(local).filter(Boolean);
   if (!paragraphs.length && site.showPlaceholders) {
-    paragraphs.push(words('Explore research interests, publications, and academic background.', '浏览研究方向、学术论文与教育经历。'));
+    paragraphs.push(words('Biography forthcoming.', '个人简介待补充。'));
   }
-  const buttons = [];
-  if (pages.includes('publications')) buttons.push({href:route('publications'), label:words('Browse publications', '浏览论文')});
-  if (profile.cv) buttons.push({href:rawURL(profile.cv), label:words('Download CV', '下载简历')});
-  else if (pages.includes('education')) buttons.push({href:route('education'), label:words('View education', '教育经历')});
   const socials = [
     [words('Email', '邮箱'), profile.email && 'mailto:' + profile.email],
-    ['Google Scholar', profile.links.scholar], ['ORCID', profile.links.orcid], ['GitHub', profile.links.github]
+    ['Google Scholar', profile.links.scholar], ['ORCID', profile.links.orcid], ['GitHub', profile.links.github],
+    ['CV', profile.cv]
   ].filter(([, href]) => href).map(([label, href]) => ({label, href:rawURL(href)}));
   const papers = data.publications.filter(item => item.selected).slice(0,3);
   const selected = pages.includes('publications') && (papers.length || site.showPlaceholders) ? {
     title:words('Selected publications', '代表论文'), href:route('publications'),
     html:papers.length ? renderPapers(papers,ctx) : '', empty:words('No selected publications yet.', '暂无代表论文。'),
-    label:words('All publications', '全部论文')
   } : null;
   const news = pages.includes('news') ? {
-    title:words('Latest news', '近期动态'), href:route('news'), label:words('News archive', '全部动态'),
+    title:words('News', '近期动态'), href:route('news'),
     empty:words('No announcements yet.', '暂无学术动态。'),
     items:data.news.slice(0,3).map(item => ({date:item.date, text:local(item.text), href:rawURL(item.url)}))
   } : null;
   return {
-    heroFirst: words('Academic', '学术'), heroLast: words(' profile', '主页'),
-    profile: { name:local(profile.name), subtitle, location:local(profile.location),
-      image:rawURL(profile.photo || 'assets/images/book-study.webp'),
-      alt:profile.photo ? local(profile.name) : '' },
-    paragraphs, buttons, socials, selected, news
+    profile: { name:local(profile.name) || 'bojuzhang', subtitle, location:local(profile.location),
+      image:rawURL(profile.photo), alt:local(profile.name) || words('Profile photo','个人照片') },
+    paragraphs, socials, selected, news
   };
 }
 
@@ -124,9 +112,7 @@ async function renderPage(data, lang, key, pages) {
     ? await engine.renderFile('about', homeModel(ctx, pages, rawURL))
     : await engine.renderFile('page', {
       page:{title:pageTitle, description},
-      content:renderSection(key, ctx),
-      related:items(relatedPages[key]),
-      relatedLabel:words('Related pages', '相关栏目')
+      content:renderSection(key, ctx)
     });
   const base = data.site.url && data.site.url.replace(/\/$/, '') + '/';
   const other = lang === 'en' ? 'zh' : 'en';
@@ -134,7 +120,7 @@ async function renderPage(data, lang, key, pages) {
     content, locale:locale[lang], title:pageTitle + ' · ' + brand, description,
     canonical:base && base + folder,
     languages:Object.keys(locale).map(code => ({code:locale[code], href:base + dir(key, code)})),
-    prefix, brand, home:route('about'), menu:items(mainPages),
+    prefix, brand, isHome:key === 'about', home:route('about'), menu:items(mainPages),
     footerMenu:items(['news','awards','service','contact']),
     alternate:{href:route(key,other), locale:locale[other], short:words('中文','EN'), name:words('中文版','English version')},
     year:new Date().getUTCFullYear(), updated:data.site.updated,

@@ -14,10 +14,6 @@ function empty(key, ctx) {
   return `<p class="section-empty">${ctx.words(...emptyMessages[key])}</p>`;
 }
 
-function archiveHeader(left, right) {
-  return `<div class="archive-heading" aria-hidden="true"><span>${left}</span><span>${right}</span></div>`;
-}
-
 function paragraph(value, ctx, className = '') {
   const text = ctx.txt(value);
   return text ? `<p class="${className}">${text}</p>` : '';
@@ -31,6 +27,7 @@ function resources(links = [], ctx) {
 
 function renderPaper(item, ctx) {
   const image = item.image ? `<img class="paper-image" alt="" src="${ctx.url(item.image)}" loading="lazy">` : '';
+  const abstract = ctx.txt(item.description);
   const citation = item.bibtex ? `
     <details class="paper-citation">
       <summary>BibTeX</summary>
@@ -39,15 +36,16 @@ function renderPaper(item, ctx) {
       <span class="copy-feedback" aria-live="polite"></span>
     </details>` : '';
   const links = resources(item.links, ctx);
+  const abstractDetails = abstract
+    ? `<details class="paper-abstract"><summary>${ctx.words('Abstract', '摘要')}</summary><p>${abstract}</p></details>`
+    : '';
   return `<article class="paper-record" data-year="${ctx.esc(item.year)}" data-selected="${item.selected === true}">
     ${image}
     <div class="paper-text">
       <h3>${ctx.txt(item.title)}</h3>
       ${paragraph(item.authors, ctx, 'paper-authors')}
       <p class="paper-venue">${[ctx.txt(item.venue), ctx.esc(item.year)].filter(Boolean).join(' · ')}</p>
-      ${paragraph(item.description, ctx, 'paper-abstract')}
-      ${links ? `<div class="resource-row">${links}</div>` : ''}
-      ${citation}
+      ${abstract || links || citation ? `<div class="paper-controls">${abstractDetails}${links}${citation}</div>` : ''}
     </div>
   </article>`;
 }
@@ -59,8 +57,7 @@ export function renderPapers(items, ctx) {
 
 function publications(ctx) {
   const { data, words, esc } = ctx;
-  const columns = archiveHeader(words('Year', '年份'), words('Publication', '论文'));
-  if (!data.publications.length) return columns + empty('publications', ctx);
+  if (!data.publications.length) return empty('publications', ctx);
 
   const groups = new Map();
   for (const paper of data.publications) {
@@ -80,29 +77,29 @@ function publications(ctx) {
     </section>`).join('');
   return `<div class="publication-archive">
     <div class="paper-filters" role="group" aria-label="${words('Filter publications', '筛选论文')}" hidden>${buttons}</div>
-    ${columns}${entries}
+    ${entries}
     <p class="filter-empty section-empty" role="status" hidden>${words('No matching publications.', '没有符合条件的论文。')}</p>
   </div>`;
 }
 
 function records(key, ctx) {
-  const { data, txt, words } = ctx;
+  const { data, txt } = ctx;
   const fields = {
-    education: ['institution', 'degree', words('Institution and degree', '院校与学位')],
-    experience: ['role', 'organization', words('Appointment', '职位与机构')],
-    awards: ['title', 'description', words('Honor or award', '荣誉与奖励')],
-    service: ['title', 'description', words('Academic service', '学术服务')]
+    education: ['degree', 'institution'],
+    experience: ['role', 'organization'],
+    awards: ['title', 'description'],
+    service: ['title', 'description']
   };
-  const [title, subtitle, columnName] = fields[key];
-  const columns = archiveHeader(words('Period', '时间'), columnName);
-  if (!data[key].length) return columns + empty(key, ctx);
-  return columns + data[key].map(item => {
+  const [title, subtitle] = fields[key];
+  if (!data[key].length) return empty(key, ctx);
+  return data[key].map(item => {
     const details = (item.details || []).map(txt).filter(Boolean);
+    const primary = txt(item[title]) || txt(item[subtitle]);
     return `<article class="archive-row">
       <div class="archive-date">${txt(item.period)}</div>
       <div class="archive-body">
-        <h2>${txt(item[title])}</h2>
-        ${paragraph(item[subtitle], ctx, 'archive-subtitle')}
+        ${primary ? `<h2>${primary}</h2>` : ''}
+        ${txt(item[title]) ? paragraph(item[subtitle], ctx, 'archive-subtitle') : ''}
         ${details.length ? `<ul>${details.map(detail => `<li>${detail}</li>`).join('')}</ul>` : ''}
       </div>
     </article>`;
@@ -110,10 +107,9 @@ function records(key, ctx) {
 }
 
 function news(ctx) {
-  const { data, esc, txt, url, words } = ctx;
-  const columns = archiveHeader(words('Date', '日期'), words('Update', '动态'));
-  if (!data.news.length) return columns + empty('news', ctx);
-  return columns + data.news.map(item => `
+  const { data, esc, txt, url } = ctx;
+  if (!data.news.length) return empty('news', ctx);
+  return data.news.map(item => `
     <article class="archive-row news-entry">
       <time class="archive-date" datetime="${esc(item.date)}">${esc(item.date)}</time>
       <p>${item.url ? `<a href="${url(item.url)}">${txt(item.text)}</a>` : txt(item.text)}</p>
